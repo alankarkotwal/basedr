@@ -1,7 +1,7 @@
 ## compilation options
 USE_GCC = 1
 PRODUCE_REPORTS = 0
-DEBUG_MODE = 1
+DEBUG_MODE = 0
 USE_PRINTING = 0
 
 ## MATLAB options
@@ -103,7 +103,6 @@ ROOTDIR = .
 INCLUDEDIR = $(ROOTDIR)/include
 SRCDIR = $(ROOTDIR)/src
 MEXDIR = $(ROOTDIR)/mexfiles
-SAMPLEDIR = $(ROOTDIR)/samples
 
 INCLUDES += -I$(INCLUDEDIR)
 
@@ -139,13 +138,13 @@ else
 endif
 
 ifeq ($(USE_MATLAB), 1)
-all: mexfiles samples
+all: mexfiles main
 else
-all: samples
+all: main
 endif
 
-samples: \
-	$(SAMPLEDIR)/renderer_sample_bin
+main: \
+	$(SRCDIR)/main
 
 mexfiles: \
 	$(MEXDIR)/renderImage_mex.$(MEXEXT) \
@@ -154,8 +153,8 @@ mexfiles: \
 	$(MEXDIR)/test_fp_mex.$(MEXEXT) \
 	$(MEXDIR)/test_source_mex.$(MEXEXT)
 
-$(SAMPLEDIR)/%_bin: \
-	$(SAMPLEDIR)/%.o \
+$(SRCDIR)/%: \
+	$(SRCDIR)/%.o \
 	$(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
@@ -165,8 +164,8 @@ $(MEXDIR)/%.$(MEXEXT): \
 	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $^ $(MATLIBS)
 
 # sample object files
-$(SAMPLEDIR)/%.o: $(SAMPLEDIR)/%.cpp $(INCLUDEDIR)/renderer.h
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $(SAMPLEDIR)/$*.cpp
+$(SRCDIR)/%.o: $(SRCDIR)/%.cpp $(INCLUDEDIR)/renderer.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $(SRCDIR)/$*.cpp
 
 # mex object files
 $(MEXDIR)/%.o: $(MEXDIR)/%.cpp \
@@ -195,11 +194,11 @@ $(SRCDIR)/%.o: \
 clean:	
 	rm -rf *.o *~
 	rm -rf $(MEXDIR)/*.o $(MEXDIR)/*~
-	rm -rf $(SAMPLEDIR)/*.o $(SAMPLEDIR)/*~
+	rm -rf $(SRCDIR)/*.o $(SRCDIR)/*~
 	rm -rf $(SRCDIR)/*.o $(SRCDIR)/*~
 
 distclean:	
 	rm -rf *.o *~
 	rm -rf $(MEXDIR)/*.o $(MEXDIR)/*~ $(MEXDIR)/*.$(MEXEXT) 
-	rm -rf $(SAMPLEDIR)/*.o $(SAMPLEDIR)/*~ $(SAMPLEDIR)/*_bin
+	rm -rf $(SRCDIR)/*.o $(SRCDIR)/*~ $(SRCDIR)/*_bin
 	rm -rf $(SRCDIR)/*.o $(SRCDIR)/*~
