@@ -29,18 +29,18 @@ LDFLAGS =
 
 ## specify compiler, adds to CFLAGS
 ifeq ($(USE_GCC), 1)
-	include gcc.mk
+	include mkfiles/gcc.mk
 	CFLAGS += -DUSE_GCC
 else
-	include icc.mk
+	include mkfiles/icc.mk
 endif
 
 ## specify boost version to use
-include boost.mk
+include mkfiles/boost.mk
 
 ## specify MATLAB flags, adds to INCLUDES and CFLAGS
 ifeq ($(USE_MATLAB), 1)
-	include matlab.mk
+	include mkfiles/matlab.mk
 endif
 
 ## specify sampler-related options
@@ -57,7 +57,7 @@ endif
 ## specify OPENEXR flags, adds to LIBS and INCLUDES, available only with GCC
 ifeq ($(USE_OPENEXR), 1)
 ifeq ($(USE_GCC), 1)
-	include openexr.mk
+	include mkfiles/openexr.mk
 	CFLAGS += -DUSE_OPENEXR
 endif
 endif
