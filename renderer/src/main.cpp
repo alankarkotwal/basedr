@@ -12,10 +12,24 @@ int main() {
 	/*
 	 * Initialize scattering parameters.
 	 */
-	const Float sigmaT = FPCONST(10.0);
-	const Float albedo = FPCONST(0.9);
-	const Float gVal = FPCONST(0.8);
-	pfunc::HenyeyGreenstein *phase = new pfunc::HenyeyGreenstein(gVal);
+    const Float sigmaS = FPCONST(15);
+    const Float sigmaA = FPCONST(20);
+    const Float gVal = FPCONST(0.8);
+	
+
+    Float albedo = FPCONST(0.0);
+	Float sigmaT = FPCONST(0.0);
+
+    /*
+	 * Initialize scattering parameters.
+	 */
+    sigmaT = sigmaS + sigmaA;
+    pfunc::HenyeyGreenstein *phase = new pfunc::HenyeyGreenstein(gVal);
+    if (sigmaA == 0 && sigmaS == 0) {
+        albedo = 0;
+    } else {
+        albedo = sigmaS / sigmaT;
+    }
 
 	/*
 	 * Initialize scene parameters.
@@ -33,7 +47,6 @@ int main() {
 							FPCONST(0.0));
 	const Float rayRadius = FPCONST(0.5);
 	const Float Li = FPCONST(75000.0);
-    std::cout << "aergaergfwerg";
 
 	/*
 	 * Initialize camera parameters.
@@ -56,14 +69,13 @@ int main() {
 	const med::Medium medium(sigmaT, albedo, phase);
 
 	const scn::Scene scene(iorMedium, mediumL, mediumR,
-						rayOrigin, rayDir, rayRadius, Li,
-						viewOrigin, viewDir, viewY, viewPlane, pathlengthRange);
+						   rayOrigin, rayDir, rayRadius, Li,
+						   viewOrigin, viewDir, viewY, viewPlane, pathlengthRange);
 
 	photon::Renderer renderer(maxDepth, maxPathlength, useDirect);
 
 	image::SmallImage img(viewReso.x, viewReso.y, viewReso.z);
 	renderer.renderImage(img, medium, scene, numPhotons);
-
     // img.writeToFile('out.pfm');
 
 	return 0;
