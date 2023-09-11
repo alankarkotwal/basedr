@@ -5,7 +5,7 @@ DEBUG_MODE = 1
 USE_PRINTING = 0
 
 ## MATLAB options
-USE_MATLAB = 1
+USE_MATLAB = 0
 
 ## sampler options
 USE_SFMT = 1
